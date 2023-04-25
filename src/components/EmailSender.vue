@@ -25,28 +25,32 @@
               class="cursor-pointer"
               name="clear"
               icon="playlist_add"
-              @click.stop.prevent="showDialogLists"
+              @click.stop.prevent="openDialogLists"
             />
           </template>
         </q-select>
+        <q-input v-model="email.subject" label="Assunto" outlined class="col-12"/>
       </div>
       <div class="col-4 row justify-center">
         <q-btn @click="send" color="primary" icon="send" label="Enviar" />
       </div>
       <div class="col-12">
-        <ag-editor :message="email.message" class="q-ma-md"></ag-editor>
+        <ag-editor v-model="email.message" class="q-ma-md"></ag-editor>
       </div>
     </div>
   </div>
+  <q-dialog v-model="showDialogLists">dialog quasar v2</q-dialog>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import AgEditor from 'src/components/AgEditor.vue'
-// import { api } from 'src/boot/axios';
+import { api } from 'src/boot/axios';
+
 const email = ref({
   sender: 'comercial@agilus.com.br',
   recipients: [],
+  subject: '',
   message: ''
 })
 
@@ -57,21 +61,23 @@ onMounted(() => {
   listRecipients.value.push('henriquevc93@gmail.com')
 })
 
-
 const showDialogLists = ref(false)
+
+const openDialogLists = () => {
+  showDialogLists.value = true
+}
 
 const send = () => {
   listRecipients.value.forEach(recipient => {
-    console.log('mensagem', email.value)
-    // api.post('email/send', {
-    //   api_key: 'api-8EE83DF07ECE11E8A036F23C91C88F4E',
-    //   to: [recipient],
-    //   sender: email.value.sender,
-    //   subject: 'Cliente interessado no Agilus CRM - contato pelo site',
-    //   html_body: email.value.message
-    // }).then(response => {
-    //   console.log('email enviado com sucesso!', response)
-    // })
+    api.post('email/send', {
+      api_key: process.env.APIKEY_SMTP,
+      to: [recipient],
+      sender: email.value.sender,
+      subject: email.value.subject,
+      html_body: email.value.message
+    }).then(response => {
+      console.log('email enviado com sucesso!', response)
+    })
   })
 }
 </script>

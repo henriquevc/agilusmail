@@ -1,6 +1,7 @@
 <template>
   <q-editor
-      v-model="message"
+      :modelValue="modelValue"
+      @update:modelValue="input"
       :dense="$q.screen.lt.md"
       :toolbar="[
         [
@@ -89,11 +90,15 @@
       }"
     />
 </template>
-<script setup lang="ts">
-import { ref } from 'vue';
-const message = ref('')
-export interface Editor {message: string};
-withDefaults(defineProps<Editor>(), {
-  message: ''
-});
+<script setup>
+const emits = defineEmits(['update:modelValue'])
+defineProps({
+  modelValue: {
+    type: [String]
+  }
+})
+
+const input = (val) => {
+  emits('update:modelValue', val)
+}
 </script>

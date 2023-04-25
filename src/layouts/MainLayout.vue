@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -27,7 +27,7 @@
         <q-item-label
           header
         >
-          Essential Links
+          Links
         </q-item-label>
 
         <EssentialLink
@@ -44,20 +44,22 @@
   </q-layout>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue';
-import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue';
+import EssentialLink from 'components/EssentialLink.vue';
 
-const essentialLinks: EssentialLinkProps[] = [
+const essentialLinks = [
   {
     title: 'Emails',
-    caption: 'emails enviados',
-    icon: 'mail'
+    caption: 'para enviar',
+    icon: 'mail',
+    link: ''
   },
   {
     title: 'Listas',
     caption: 'grupos de destinatários',
-    icon: 'list'
+    icon: 'list',
+    link: '#/lists'
   }
 ];
 

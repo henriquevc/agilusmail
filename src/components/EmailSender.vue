@@ -42,10 +42,10 @@
   <q-dialog v-model="showDialogLists">dialog quasar v2</q-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import AgEditor from 'src/components/AgEditor.vue'
 import { api } from 'src/boot/axios';
+import AgEditor from './AgEditor.vue';
 
 const email = ref({
   sender: 'comercial@agilus.com.br',
@@ -54,7 +54,7 @@ const email = ref({
   message: ''
 })
 
-const listRecipients = ref([])
+const listRecipients = ref<string[]>([])
 
 onMounted(() => {
   listRecipients.value.push('henrique@agilus.com.br')

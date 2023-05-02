@@ -90,15 +90,13 @@
       }"
     />
 </template>
-<script setup>
+<script setup lang="ts">
 const emits = defineEmits(['update:modelValue'])
-defineProps({
-  modelValue: {
-    type: [String]
-  }
-})
+defineProps<{
+  modelValue: string
+}>()
 
-const input = (val) => {
+const input = (val: string) => {
   emits('update:modelValue', val)
 }
 </script>

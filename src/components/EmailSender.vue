@@ -39,7 +39,23 @@
       </div>
     </div>
   </div>
-  <q-dialog v-model="showDialogLists">dialog quasar v2</q-dialog>
+  <q-dialog v-model="showDialogLists">
+    <q-card style="min-width: 320px">
+      <q-card-section class="row items-center">
+        <div class="text-h6">Lista de destinatários</div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+      <q-card-section>
+        <div class="row">
+          <q-select label="selecione uma lista" outlined class="col-12"></q-select>
+        </div>
+      </q-card-section>
+      <q-card-section class="row justify-end">
+        <q-btn @click="okModalLists" label="Salvar" color="secondary"></q-btn>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>

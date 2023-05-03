@@ -9,9 +9,10 @@
   </q-page>
 </template>
 
-<script setup>
-
+<script setup lang="ts">
+import { useRouter } from 'vue-router';
+const router = useRouter()
 const addList = () => {
-  console.log('clicou em adicionar item')
+  router.push('listDetail')
 }
 </script>

@@ -48,7 +48,7 @@
       </q-card-section>
       <q-card-section>
         <div class="row">
-          <q-select label="selecione uma lista" outlined class="col-12"></q-select>
+          <q-select label="selecione uma lista" outlined class="col-12" v-model="emailsModal"></q-select>
         </div>
       </q-card-section>
       <q-card-section class="row justify-end">
@@ -62,6 +62,7 @@
 import { ref, onMounted } from 'vue';
 import { api } from 'src/boot/axios';
 import AgEditor from './AgEditor.vue';
+import { list } from 'postcss';
 
 const email = ref({
   sender: 'comercial@agilus.com.br',
@@ -71,6 +72,7 @@ const email = ref({
 })
 
 const listRecipients = ref<string[]>([])
+const emailsModal = ref<string[]>([])
 
 onMounted(() => {
   listRecipients.value.push('henrique@agilus.com.br')
@@ -81,6 +83,12 @@ const showDialogLists = ref(false)
 
 const openDialogLists = () => {
   showDialogLists.value = true
+}
+
+const okModalLists = () => {
+  emailsModal.value.forEach(email => {
+    listRecipients.value.push(email)
+  })
 }
 
 const send = () => {

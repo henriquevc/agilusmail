@@ -15,6 +15,7 @@
   "dependencies": {
     "@quasar/cli": "^2.0.0",
     "@quasar/extras": "^1.0.0",
+    "@supabase/supabase-js": "^2.21.0",
     "axios": "^1.2.1",
     "dotenv": "^16.0.3",
     "quasar": "^2.6.0",

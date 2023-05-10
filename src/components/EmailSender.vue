@@ -62,7 +62,6 @@
 import { ref, onMounted } from 'vue';
 import { api } from 'src/boot/axios';
 import AgEditor from './AgEditor.vue';
-import { list } from 'postcss';
 
 const email = ref({
   sender: 'comercial@agilus.com.br',

@@ -30,6 +30,7 @@ const save = () => {
   list.value.emails = emailsArray.value
     .split('\n')
     .map(item => item.split(';'))
-    .reduce((acc, cur) => cur.concat(acc), []).filter(e => !!e)
+    .reduce((acc, cur) => cur.concat(acc), [])
+    .filter(e => !!e)
 }
 </script>

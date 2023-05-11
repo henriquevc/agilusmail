@@ -20,13 +20,27 @@ const routes: RouteRecordRaw[] = [
         name: 'register',
         component: () => import('pages/RegisterPage.vue'),
       },
+      {
+        path: 'email-confirmation',
+        name: 'email-confirmation',
+        component: () => import('pages/EmailConfirmation.vue'),
+      },
+      {
+        path: 'me',
+        name: 'me',
+        component: () => import('pages/MePage.vue'),
+      },
     ],
   },
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') },
+      {
+        path: '/email-sender',
+        name: 'email-sender',
+        component: () => import('pages/IndexPage.vue'),
+      },
       {
         path: 'lists',
         component: () => import('src/pages/ListsPage.vue'),

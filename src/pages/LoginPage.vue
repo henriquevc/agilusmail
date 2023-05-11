@@ -46,7 +46,7 @@ const viewPassword = ref(false)
 const sigin = async () => {
     try {
         await login(form.value)
-        router.push({name: 'me'})
+        router.push({name: 'email-sender'})
     } catch (error: any) {
         alert(error.message)
     }

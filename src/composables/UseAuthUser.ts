@@ -14,15 +14,14 @@ export default function useAuthUser() {
 
   const login = async ({ email, password }: Omit<AuthParams, 'meta'>) => {
     const {
-      data: { session },
+      data: { user },
       error,
     } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     if (error) throw error;
-    if (!session) throw new Error('sessao nao encontrada');
-    return session.user;
+    return user;
   };
 
   const logout = async () => {

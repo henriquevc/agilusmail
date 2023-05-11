@@ -14,7 +14,14 @@
           Agilus Mail
         </q-toolbar-title>
 
-        <div>Agilus Ltda.</div>
+        <q-item class="q-mr-sm" dark>
+          <q-item-section>
+            <q-item-label>{{ user?.user_metadata.name }}</q-item-label>
+            <q-item-label caption> {{ user?.email }}</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-btn icon="logout" round flat @click="handleLogout"></q-btn>
       </q-toolbar>
     </q-header>
 
@@ -47,25 +54,37 @@
 <script setup>
 import { ref } from 'vue';
 import EssentialLink from 'components/EssentialLink.vue';
+import useAuthUser from 'src/composables/UseAuthUser';
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const { user, logout } = useAuthUser()
 
 const essentialLinks = [
   {
     title: 'Emails',
     caption: 'para enviar',
     icon: 'mail',
-    link: ''
+    link: '/email-sender'
   },
   {
     title: 'Listas',
     caption: 'grupos de destinatários',
     icon: 'list',
-    link: '#/lists'
+    link: '/lists'
   }
 ];
 
 const leftDrawerOpen = ref(false)
 
-function toggleLeftDrawer() {
+const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
+
+const handleLogout = async () => {
+  await logout()
+  router.replace({name: 'login'})
+}
+
+
 </script>

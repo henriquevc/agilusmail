@@ -7,6 +7,8 @@ import {
 } from 'vue-router';
 
 import routes from './routes';
+import useAuthUser from './../composables/UseAuthUser';
+import { nextTick } from 'process';
 
 /*
  * If not building with SSR mode, you can
@@ -32,6 +34,17 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
+  });
+
+  Router.beforeEach((to) => {
+    const { isLoggedIn } = useAuthUser();
+    if (
+      !isLoggedIn() &&
+      to.meta.requiresAuth &&
+      !Object.keys(to.query).includes('fromEmail')
+    ) {
+      return { name: 'login' };
+    }
   });
 
   return Router;

@@ -8,7 +8,7 @@
                 <q-card class="q-pa-lg shadow-24">
                 <q-card-section>
                     <q-form class="q-gutter-md">
-                        <q-input filled clearable v-model="form.email" type="email" label="Email">
+                        <q-input filled clearable v-model="form.email" type="email" label="Email" :rules="[val => (val && val.length > 0) || 'email é obrigatório']">
                             <template #prepend><q-icon name="mail"/></template>
                         </q-input>
                         <q-input filled clearable v-model="form.password" :type="viewPassword ? 'text' : 'password'" label="Senha">
@@ -29,19 +29,25 @@
     </q-page>
 </template>
 <script setup lang="ts">
-import {ref} from 'vue'
+import {ref, onMounted} from 'vue'
 import useAuthUser from 'src/composables/UseAuthUser'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const { login } = useAuthUser()
+const { login, isLoggedIn } = useAuthUser()
 
 const form = ref({
     email: '',
     password: ''
 })
 const viewPassword = ref(false)
+
+onMounted(() => {
+  if (isLoggedIn()) {
+    router.push({ name: 'email-sender'})
+  }
+})
 
 const sigin = async () => {
     try {

@@ -8,7 +8,6 @@ import {
 
 import routes from './routes';
 import useAuthUser from './../composables/UseAuthUser';
-import { nextTick } from 'process';
 
 /*
  * If not building with SSR mode, you can

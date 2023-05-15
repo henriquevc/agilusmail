@@ -6,16 +6,16 @@
 
       <q-table
         class="q-mt-lg"
-        :rows="rows"
+        :rows="lists"
         :columns="columns"
         row-key="name"
+        :loading="loading"
       >
         <template v-slot:body="props">
           <q-tr :props="props" @click="onRowClick(props.row)" class="cursor-pointer">
-            <q-td key="name">{{ props.row.name }}</q-td>
+            <q-td key="name" class="text-center">{{ props.row.name }}</q-td>
             <q-td key="actions" :props="props">
-              <q-btn icon="edit" flat round color="primary"></q-btn>
-              <q-btn icon="delete" flat round color="negative"></q-btn>
+              <q-btn icon="delete" flat round color="negative" @click.stop="deleteItem(props.row)"></q-btn>
             </q-td>
           </q-tr>
         </template>
@@ -25,6 +25,8 @@
 </template>
 
 <script setup>
+import useApi from 'src/composables/UseApi';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter()
 
@@ -33,35 +35,39 @@ const addList = () => {
 }
 
 const columns = [
-  { name: 'name', required: true, label: 'Dessert (100g serving)', field: 'name', align: 'left', sortable: true },
+  { name: 'name', required: true, label: 'Nome da lista', field: 'name', align: 'center', sortable: true },
   { name: 'actions', label: '', field: 'actions', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
 ]
 
-const rows = [
-  {
-    name: 'Frozen Yogurt',
-  },
-  {
-    name: 'Ice cream sandwich',
-  },
-  {
-    name: 'Eclair',
-  },
-  {
-    name: 'Cupcake',
-  },
-  {
-    name: 'Gingerbread',
-  },
-  {
-    name: 'Jelly bean',
-  },
-  {
-    name: 'Lollipop',
-  },
-]
+const lists = ref([])
+const { list, remove } = useApi()
+const loading = ref(true)
+
+const handleLoadLists = async () => {
+  try {
+    loading.value = true
+    lists.value = await list('lists')
+    loading.value = false
+  } catch(error) {
+    console.log(error)
+  }
+}
+
+onMounted(() => {
+  handleLoadLists()
+})
 
 const onRowClick = (item) => {
-  console.log(item)
+  router.push({ path: `listDetail/${item.id}` })
+}
+
+const deleteItem = async (item) => {
+  try {
+    await remove('lists', item.id)
+    let index = lists.value.findIndex(l => l.id === item.id)
+    lists.value.splice(index, 1)
+  } catch (error) {
+    console.error(error)
+  }
 }
 </script>

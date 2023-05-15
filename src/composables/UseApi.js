@@ -1,11 +1,20 @@
 import useSupabase from '../boot/supabase';
 import useAuthUser from './UseAuthUser';
 export default function useApi() {
-  const supabase = useSupabase();
+  const { supabase } = useSupabase();
   const { user } = useAuthUser();
 
   const list = async (table) => {
     const { data, error } = await supabase.from(table).select('*');
+    if (error) throw error;
+    return data;
+  };
+
+  const listDependency = async (table, foreignKeyName, idDependency) => {
+    const { data, error } = await supabase
+      .from(table)
+      .select()
+      .eq(foreignKeyName, idDependency.toString());
     if (error) throw error;
     return data;
   };
@@ -17,12 +26,14 @@ export default function useApi() {
   };
 
   const post = async (table, form) => {
-    const { data, error } = await supabase.from(table).insert([
-      {
-        ...form,
-        user_id: user.value.id,
-      },
-    ]);
+    const { data, error } = await supabase
+      .from(table)
+      .insert([
+        {
+          ...form,
+        },
+      ])
+      .select();
     if (error) throw error;
     return data;
   };
@@ -30,12 +41,9 @@ export default function useApi() {
   const update = async (table, form) => {
     const { data, error } = await supabase
       .from(table)
-      .udpate([
-        {
-          ...form,
-          user_id: user.value.id,
-        },
-      ])
+      .udpate({
+        ...form,
+      })
       .match({ id: form.id });
     if (error) throw error;
     return data;
@@ -52,6 +60,7 @@ export default function useApi() {
 
   return {
     list,
+    listDependency,
     getById,
     post,
     update,

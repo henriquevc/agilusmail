@@ -40,7 +40,7 @@ const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: '/email-sender',
+        path: 'email-sender',
         name: 'email-sender',
         component: () => import('pages/IndexPage.vue'),
       },
@@ -50,7 +50,7 @@ const routes: RouteRecordRaw[] = [
         name: 'lists',
       },
       {
-        path: '/listDetail',
+        path: 'listDetail/:id?',
         component: () => import('src/pages/ListsDetail.vue'),
         name: 'listsDetail',
       },

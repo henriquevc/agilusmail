@@ -1,8 +1,6 @@
 import useSupabase from '../boot/supabase';
-import useAuthUser from './UseAuthUser';
 export default function useApi() {
   const { supabase } = useSupabase();
-  const { user } = useAuthUser();
 
   const list = async (table) => {
     const { data, error } = await supabase.from(table).select('*');
@@ -15,6 +13,16 @@ export default function useApi() {
       .from(table)
       .select()
       .eq(foreignKeyName, idDependency.toString());
+    if (error) throw error;
+    return data;
+  };
+
+  const getListsWithEmails = async () => {
+    const { data, error } = await supabase.from('lists').select(
+      `id, name, emails (
+        email
+      )`
+    );
     if (error) throw error;
     return data;
   };
@@ -61,6 +69,7 @@ export default function useApi() {
   return {
     list,
     listDependency,
+    getListsWithEmails,
     getById,
     post,
     update,

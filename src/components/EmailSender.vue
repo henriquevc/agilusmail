@@ -48,7 +48,16 @@
       </q-card-section>
       <q-card-section>
         <div class="row">
-          <q-select label="selecione uma lista" outlined class="col-12" v-model="emailsModal"></q-select>
+          <q-select label="selecione uma lista" outlined class="col-12" :options="listsOptions" v-model="emailsModal" hint="* exibindo somente os 10 primeiros e-mail de cada lista">
+            <template v-slot:option="scope">
+              <q-item v-bind="scope.itemProps">
+                <q-item-section>
+                  <q-item-label>{{ scope.opt.label }}</q-item-label>
+                  <q-item-label caption lines="4">{{ scope.opt.description }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
+          </q-select>
         </div>
       </q-card-section>
       <q-card-section class="row justify-end">
@@ -62,6 +71,7 @@
 import { ref, onMounted } from 'vue';
 import { api } from 'src/boot/axios';
 import AgEditor from './AgEditor.vue';
+import useApi from 'src/composables/UseApi';
 
 const email = ref({
   sender: 'comercial@agilus.com.br',
@@ -71,11 +81,25 @@ const email = ref({
 })
 
 const listRecipients = ref<string[]>([])
-const emailsModal = ref<string[]>([])
+const emailsModal = ref<ListOptions>({label: '', description:''})
+const listsOptions = ref<ListOptions[]>([])
 
-onMounted(() => {
+const { getListsWithEmails } = useApi()
+
+interface ListOptions {
+  label: string;
+  value?: number;
+  description: string;
+}
+
+onMounted(async () => {
   listRecipients.value.push('henrique@agilus.com.br')
   listRecipients.value.push('henriquevc93@gmail.com')
+  let lists = await getListsWithEmails()
+  listsOptions.value = lists.map(e => ({
+    label: e.name,
+    value: e.id,
+    description: e.emails?.map(em => em.email).slice(0, 10).join('/')}))
 })
 
 const showDialogLists = ref(false)
@@ -85,7 +109,8 @@ const openDialogLists = () => {
 }
 
 const okModalLists = () => {
-  emailsModal.value.forEach(email => {
+  console.log(emailsModal.value.description.split('/'))
+  emailsModal.value.description.split('/').forEach(email => {
     listRecipients.value.push(email)
   })
 }

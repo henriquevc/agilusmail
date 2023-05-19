@@ -12,6 +12,7 @@
           new-value-mode="toggle"
           use-chips
           use-input
+          style="max-height: 200px; overflow-y: auto;"
           hide-dropdown-icon
           stack-label
           input-debounce="0"
@@ -50,7 +51,7 @@
         <div class="row">
           <q-select label="selecione uma lista" outlined class="col-12" :options="listsOptions" v-model="emailsModal" hint="* exibindo somente os 10 primeiros e-mail de cada lista">
             <template v-slot:option="scope">
-              <q-item v-bind="scope.itemProps">
+              <q-item v-bind="scope.itemProps" style="max-width: 320px">
                 <q-item-section>
                   <q-item-label>{{ scope.opt.label }}</q-item-label>
                   <q-item-label caption lines="4">{{ scope.opt.description }}</q-item-label>
@@ -75,7 +76,7 @@ import useApi from 'src/composables/UseApi';
 
 const email = ref({
   sender: 'comercial@agilus.com.br',
-  recipients: [],
+  recipients: [] as string[],
   subject: '',
   message: ''
 })
@@ -83,6 +84,7 @@ const email = ref({
 const listRecipients = ref<string[]>([])
 const emailsModal = ref<ListOptions>({label: '', description:''})
 const listsOptions = ref<ListOptions[]>([])
+const listsWithEmails = ref<ListWithEMails[]>([])
 
 const { getListsWithEmails } = useApi()
 
@@ -92,14 +94,23 @@ interface ListOptions {
   description: string;
 }
 
+interface Email {
+  email: string
+}
+
+interface ListWithEMails {
+  id: number
+  name: string
+  emails: Email[]
+}
+
 onMounted(async () => {
-  listRecipients.value.push('henrique@agilus.com.br')
-  listRecipients.value.push('henriquevc93@gmail.com')
-  let lists = await getListsWithEmails()
-  listsOptions.value = lists.map(e => ({
+  listsWithEmails.value = (await getListsWithEmails()).map(e => ({id: e.id as number, name: e.name as string, emails: e.emails as Email[]}))
+  console.log(listsWithEmails)
+  listsOptions.value = listsWithEmails.value.map(e => ({
     label: e.name,
     value: e.id,
-    description: e.emails?.map(em => em.email).slice(0, 10).join('/')}))
+    description: e.emails.map(em => em.email).slice(0, 10).join(', ')}))
 })
 
 const showDialogLists = ref(false)
@@ -109,10 +120,11 @@ const openDialogLists = () => {
 }
 
 const okModalLists = () => {
-  console.log(emailsModal.value.description.split('/'))
-  emailsModal.value.description.split('/').forEach(email => {
-    listRecipients.value.push(email)
+  let listSelected = listsWithEmails.value.find(ls => ls.id === emailsModal.value.value)
+  listSelected?.emails.forEach(em => {
+    email.value.recipients.push(em.email)
   })
+  showDialogLists.value = false
 }
 
 const send = () => {

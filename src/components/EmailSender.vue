@@ -33,7 +33,8 @@
         <q-input v-model="email.subject" label="Assunto" outlined class="col-12"/>
       </div>
       <div class="col-4 row justify-center">
-        <q-btn @click="send" color="primary" icon="send" label="Enviar" />
+        <q-btn @click="send" color="primary" icon="send" label="Enviar" :loading="sendingEmails" :percentage="percentageSending">
+        </q-btn>
       </div>
       <div class="col-12">
         <ag-editor v-model="email.message" class="q-ma-md"></ag-editor>
@@ -73,6 +74,9 @@ import { ref, onMounted } from 'vue';
 import { api } from 'src/boot/axios';
 import AgEditor from './AgEditor.vue';
 import useApi from 'src/composables/UseApi';
+import { useQuasar } from 'quasar'
+
+const $q = useQuasar()
 
 const email = ref({
   sender: 'comercial@agilus.com.br',
@@ -104,6 +108,7 @@ interface ListWithEMails {
   emails: Email[]
 }
 
+
 onMounted(async () => {
   listsWithEmails.value = (await getListsWithEmails()).map(e => ({id: e.id as number, name: e.name as string, emails: e.emails as Email[]}))
   console.log(listsWithEmails)
@@ -127,17 +132,29 @@ const okModalLists = () => {
   showDialogLists.value = false
 }
 
-const send = () => {
-  listRecipients.value.forEach(recipient => {
-    api.post('email/send', {
+const sendingEmails = ref(false)
+const percentageSending = ref(0.0)
+
+const send = async () => {
+  sendingEmails.value = true
+  let count = 0.0
+  for (const recipient of email.value.recipients) {
+    await api.post('email/send', {
       api_key: process.env.APIKEY_SMTP,
       to: [recipient],
       sender: email.value.sender,
       subject: email.value.subject,
       html_body: email.value.message
-    }).then(response => {
-      console.log('email enviado com sucesso!', response)
     })
-  })
+    count += 1
+    percentageSending.value = (count / email.value.recipients.length) * 100
+  }
+  if (count === email.value.recipients.length) {
+    sendingEmails.value = false
+    $q.notify({
+      type: 'positive',
+      message: 'Emails enviado com sucesso.'
+    })
+  }
 }
 </script>

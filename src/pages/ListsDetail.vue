@@ -6,7 +6,7 @@
         </div>
         <div class="row q-col-gutter-md">
             <q-input v-model="list.name" label="Nome da lista" outlined class="col-12" :rules="[val => (val && val.length > 0) || 'Campo obrigatório']" />
-            <q-input v-model="emailsArray" label="Emails" type="textarea" rows="10" outlined class="col-12" hint="coloque os emails separados por virgula ou enter" :rules="[val => (val && val.length > 0) || 'Campo obrigatório']"  />
+            <q-input v-model="emailsArray" label="Emails" type="textarea" rows="10" outlined class="col-12" hint="coloque os emails separados por ponto e virgula (;) ou enter" :rules="[val => (val && val.length > 0) || 'Campo obrigatório']"  />
         </div>
     </q-page>
 </template>

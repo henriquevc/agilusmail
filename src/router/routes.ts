@@ -25,11 +25,6 @@ const routes: RouteRecordRaw[] = [
         name: 'email-confirmation',
         component: () => import('pages/EmailConfirmation.vue'),
       },
-      {
-        path: 'me',
-        name: 'me',
-        component: () => import('pages/MePage.vue'),
-      },
     ],
   },
   {

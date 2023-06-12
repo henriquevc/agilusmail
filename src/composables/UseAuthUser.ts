@@ -42,7 +42,7 @@ export default function useAuthUser() {
       password,
       options: {
         data: meta,
-        emailRedirectTo: `${window.location.origin}/me?fromEmail=registrationConfirmation`,
+        emailRedirectTo: `${window.location.origin}/login`,
       },
     });
     if (error) throw error;

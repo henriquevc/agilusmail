@@ -72,6 +72,12 @@ const essentialLinks = [
     caption: 'grupos de destinatários',
     icon: 'list',
     link: '/lists'
+  },
+  {
+    title: 'Templates',
+    caption: 'de mensagens',
+    icon: 'template',
+    link: '/templates'
   }
 ];
 

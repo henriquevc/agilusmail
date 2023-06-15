@@ -49,6 +49,16 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/ListsDetail.vue'),
         name: 'listsDetail',
       },
+      {
+        path: 'templates',
+        component: () => import('src/pages/TemplatesPage.vue'),
+        name: 'templates',
+      },
+      {
+        path: 'templateDetail/:id?',
+        component: () => import('src/pages/TemplateDetail.vue'),
+        name: 'templatesDetail',
+      },
     ],
   },
 

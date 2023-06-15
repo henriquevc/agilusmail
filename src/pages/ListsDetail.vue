@@ -11,7 +11,6 @@
     </q-page>
 </template>
 <script setup lang="ts">
-import { is } from 'quasar'
 import useApi from 'src/composables/UseApi'
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'

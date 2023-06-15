@@ -10,6 +10,7 @@
         :columns="columns"
         row-key="name"
         :loading="loading"
+        :pagination="paginationConfig"
       >
         <template v-slot:body="props">
           <q-tr :props="props" @click="onRowClick(props.row)" class="cursor-pointer">
@@ -33,6 +34,8 @@ const router = useRouter()
 const addList = () => {
   router.push('listDetail')
 }
+
+const paginationConfig = ref({ rowsPerPage: 0 })
 
 const columns = [
   { name: 'name', required: true, label: 'Nome da lista', field: 'name', align: 'center', sortable: true },

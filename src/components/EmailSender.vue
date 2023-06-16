@@ -111,7 +111,6 @@ interface ListWithEMails {
 
 onMounted(async () => {
   listsWithEmails.value = (await getListsWithEmails()).map(e => ({id: e.id as number, name: e.name as string, emails: e.emails as Email[]}))
-  console.log(listsWithEmails)
   listsOptions.value = listsWithEmails.value.map(e => ({
     label: e.name,
     value: e.id,
@@ -136,25 +135,37 @@ const sendingEmails = ref(false)
 const percentageSending = ref(0.0)
 
 const send = async () => {
-  sendingEmails.value = true
-  let count = 0.0
-  for (const recipient of email.value.recipients) {
-    await api.post('email/send', {
-      api_key: process.env.APIKEY_SMTP,
-      to: [recipient],
-      sender: email.value.sender,
-      subject: email.value.subject,
-      html_body: email.value.message
-    })
-    count += 1
-    percentageSending.value = (count / email.value.recipients.length) * 100
-  }
-  if (count === email.value.recipients.length) {
+  try {
+    if (!email.value.recipients.length) {
+      $q.notify({
+        type: 'negative',
+        message: 'Nenhum destinatário para enviar email.'
+      })
+      return
+    }
+    sendingEmails.value = true
+    let count = 0.0
+    for (const recipient of email.value.recipients) {
+      await api.post('email/send', {
+        api_key: process.env.APIKEY_SMTP,
+        to: [recipient],
+        sender: email.value.sender,
+        subject: email.value.subject,
+        html_body: email.value.message
+      })
+      count += 1
+      percentageSending.value = (count / email.value.recipients.length) * 100
+    }
+    if (count === email.value.recipients.length) {
+      sendingEmails.value = false
+      $q.notify({
+        type: 'positive',
+        message: 'Emails enviado com sucesso.'
+      })
+    }
+  } catch (e) {
+    console.error(e)
     sendingEmails.value = false
-    $q.notify({
-      type: 'positive',
-      message: 'Emails enviado com sucesso.'
-    })
   }
 }
 </script>

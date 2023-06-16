@@ -71,7 +71,7 @@ const save = async () => {
             router.push({name: 'lists'})
         }
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 }
 

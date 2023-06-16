@@ -52,7 +52,7 @@ const handleLoadLists = async () => {
     lists.value = await list('lists')
     loading.value = false
   } catch(error) {
-    console.log(error)
+    console.error(error)
   }
 }
 

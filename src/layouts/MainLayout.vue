@@ -76,7 +76,7 @@ const essentialLinks = [
   {
     title: 'Templates',
     caption: 'de mensagens',
-    icon: 'template',
+    icon: 'subject',
     link: '/templates'
   }
 ];

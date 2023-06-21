@@ -49,7 +49,7 @@ export default function useApi() {
   const update = async (table, form) => {
     const { data, error } = await supabase
       .from(table)
-      .udpate({
+      .update({
         ...form,
       })
       .match({ id: form.id });

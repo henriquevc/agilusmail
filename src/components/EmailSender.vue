@@ -208,7 +208,7 @@ const send = async () => {
       })
       count += 1
       percentageSending.value = (count / email.value.recipients.length) * 100
-      await sleep(5000)
+      await sleep(1000)
     }
     if (count === email.value.recipients.length) {
       sendingEmails.value = false
